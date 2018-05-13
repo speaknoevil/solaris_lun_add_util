@@ -4,6 +4,7 @@
 # Designed around solaris 11 with python 2.7.
 """ Takes a list of luns and formats them (on Solaris); optionally chowns to specific oracle user/grp """
 
+import os
 import sys
 import argparse
 from subprocess import *
@@ -71,8 +72,8 @@ def log_config(args):
     """ For dev, not really general logging. """
     if args.debug: logging.basicConfig(level=logging.DEBUG)
 
-def proc_printer(tuple):
-    for o, e in tuple:
+def proc_printer(Tuple):
+    for o, e in Tuple:
         print(o.decode('utf-8'))
         if e: print(e)
 
@@ -114,9 +115,7 @@ def format_luns(lun_list, lun_format):
         cmd1 = ['/usr/bin/sudo', '/usr/sbin/format', '-e', x]
         format_p1 = Popen(cmd1, stdin=PIPE, stdout=PIPE, stderr=STDOUT)
         Output_t = format_p1.communicate(input=lun_format)
-        for out_pos in xrange(2):
-            if Output_t[out_pos]:
-                print(Output_t[out_pos])
+        proc_printer(Output_t)
 
 def check_luns(lun_list):
     """ Prints out format info to allow you to check that Luns are correctly formatted """
@@ -172,14 +171,14 @@ def chownLuns(lun_files_list):
 
 def chown_files(lunlist, verbose=True):
     """ Call this with a list of luns to do the actual chown. Lists files before and after. """
-        s6_luns = lun_file_list(lunlist)
-        if verbose:
-            print '-={Before}=-:'
-            lslLuns(s6_luns)
-        chownLuns(s6_luns)
-        if verbose:
-            print '-={After }=-:'
-            lslLuns(s6_luns)
+    s6_luns = lun_file_list(lunlist)
+    if verbose:
+       print '-={Before}=-:'
+       lslLuns(s6_luns)
+    chownLuns(s6_luns)
+    if verbose:
+        print '-={After }=-:'
+        lslLuns(s6_luns)
 
 def main():
     """ real format ; check formatting ; print ticket output """
