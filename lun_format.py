@@ -19,6 +19,10 @@ def arg_handler():
     parser.add_argument('--debug', action='store_true', help='Turn on debug')
     return parser.parse_args()
 
+def exception_handler():
+    return '{}. {}, line: {}'.format(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2].tb_lineno)
+
+
 class LunFormat:
     diskRoot = '/dev/rdsk/'
     OS = sys.platform[:3]
@@ -65,7 +69,7 @@ q"""
             os.chdir(self.diskRoot)
         except Exception as e:
             print(' unable to chdir to ' + self.diskRoot)
-            print(e)
+            logging.critical(exception_handler())
             sys.exit(2)
 
 def log_config(args):
@@ -92,8 +96,7 @@ def scan():
             return controller_list
     except Exception as e:
         print(' Error: Failed to collect disk names')
-        proc_printer(format_out)
-        print(e)
+        logging.critical(exception_handler())
         sys.exit(2)
 
 def lun_format_input(raw_template,label):
@@ -184,6 +187,7 @@ def main():
     """ real format ; check formatting ; print ticket output """
     args = arg_handler()
     myLF = LunFormat()
+    scan() #moo
     myLF.OS_check()
     myLF.ch_dir()
     log_config(args)
