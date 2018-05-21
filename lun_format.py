@@ -187,7 +187,6 @@ def main():
     """ real format ; check formatting ; print ticket output """
     args = arg_handler()
     myLF = LunFormat()
-    scan() #moo
     myLF.OS_check()
     myLF.ch_dir()
     log_config(args)
