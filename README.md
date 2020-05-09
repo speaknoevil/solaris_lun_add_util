@@ -1,5 +1,7 @@
 # san_utils
 
+NOTE: Currently does not function with Solaris 11.4 due to changes in 'format' output.
+
 Client side LUN addition utility for Solaris hosts. Primary use is for oracle lun additions.
 
 The primary use of this program is for is discovering newly zoned luns on solaris servers, formatting them, optionally chowning them to oracle:dba,
